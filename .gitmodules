@@ -1,0 +1,3 @@
+[submodule "tty7tyil_python"]
+    path = tty7tyil_python
+    url = https://github.com/tty7tyil/tty7tyil_python.git
