@@ -36,8 +36,8 @@ temp_HEADERS_USER_AGENT = {
 def fetch(
     tv_show_id: str,
     per_page: int = 50,
-) -> Set[Tuple[int, int, str, float, int, str]]:
-# -> Set[Tuple[season, episode, title, rating, original_index, tv_episode_id]]
+) -> Set[Tuple[int, int, int, str, float, str]]:
+# -> Set[Tuple[original_index, season, episode, title, rating, tv_episode_id]]
     # css path:
     # - the list: div.lister.list.detail.sub-list div.lister-list
     #   - each entry: div.lister-item.mode-simple div.lister-item-content div.lister-col-wrapper
@@ -84,7 +84,7 @@ def fetch(
         season: int = int(_temp[1])
         episode: int = int(_temp[4])
 
-        episode_list.append((season, episode, title, rating, original_index, tv_episode_id))
+        episode_list.append((original_index, season, episode, title, rating, tv_episode_id))
 
     return set(episode_list)
 
