@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+from tty7tyil_python import crawler_requests_session as crs
 from typing import Set, Tuple
-import requests
 import bs4
+import requests
 import sys
 
 tv_show_id: str = ''
@@ -22,15 +23,14 @@ URL_IMDB_TOP_RATED_EPISODES = ''.join((
 ))
 URL_IMDB_TITLE_ENTRY = 'https://www.imdb.com/title/{title_id}/'
 
-temp_PROXIES = {
-    'http': '',
-    'https': '',
-}
-temp_HEADERS_USER_AGENT = {
-    'User-Agent': ' '.join((
-        '',
-    ))
-}
+CRS_SESSION = crs.Crawler_Requests_Session(
+    proxies_list=[
+        {
+            'http': 'socks5h://127.0.0.1:1080/',
+            'https': 'socks5h://127.0.0.1:1080/',
+        },
+    ],
+)
 
 
 def fetch(
@@ -45,11 +45,8 @@ def fetch(
     #     - tv_episode_id     : div.col-title span.lister-item-header span a
     #     - title             : div.col-title span.lister-item-header span a
     #     - rating            : div.col-imdb-rating strong
-    session = requests.Session()
-    session.proxies.update(temp_PROXIES)
-    session.headers.update(temp_HEADERS_USER_AGENT)
 
-    top_rated_page = session.get(
+    top_rated_page = CRS_SESSION.get(
         URL_IMDB_TOP_RATED_EPISODES.format(tv_show_id=tv_show_id, per_page=per_page)
     )
     top_rated_page_soup = bs4.BeautifulSoup(top_rated_page.text, 'html.parser')
@@ -72,7 +69,7 @@ def fetch(
 
         rating: float = float(e.find('strong').string.strip())
 
-        episode_page = session.get(URL_IMDB_TITLE_ENTRY.format(title_id=tv_episode_id))
+        episode_page = CRS_SESSION.get(URL_IMDB_TITLE_ENTRY.format(title_id=tv_episode_id))
         episode_page_soup = bs4.BeautifulSoup(episode_page.text, 'html.parser')
         _temp = (
             episode_page_soup
