@@ -36,8 +36,8 @@ CRS_SESSION = crs.Crawler_Requests_Session(
 def fetch(
     tv_show_id: str,
     per_page: int = 50,
-) -> Set[Tuple[int, int, int, str, float, str]]:
-# -> Set[Tuple[original_index, season, episode, title, rating, tv_episode_id]]
+) -> Set[Tuple[int, int, str, float, int, str]]:
+# -> Set[Tuple[season, episode, title, rating, original_index, tv_episode_id]]
     # css path:
     # - the list: div.lister.list.detail.sub-list div.lister-list
     #   - each entry: div.lister-item.mode-simple div.lister-item-content div.lister-col-wrapper
@@ -81,17 +81,24 @@ def fetch(
         season: int = int(_temp[1])
         episode: int = int(_temp[4])
 
-        episode_list.append((original_index, season, episode, title, rating, tv_episode_id))
+        episode_list.append((season, episode, title, rating, original_index, tv_episode_id))
 
     return set(episode_list)
 
 
-def print_episode(episode_set: Set[Tuple[int, int, int, str, float, str]]) -> None:
+def print_episode(
+    episode_set: Set[Tuple[int, int, str, float, int, str]],
+    sort_method = lambda e: e[4],
+) -> None:
     episode_list = list(episode_set)
     # some other sort process here
-    episode_list.sort()
+    episode_list.sort(key=sort_method)
     for e in episode_list:
-        print('S{1:0>2} E{2:0>2} - ({4: >4}) {3}'.format(*e))
+        print(
+            '{4:_>{index_width}}> S{0:0>2} E{1:0>2} - ({3: >4}) {2}'.format(
+                *e, index_width=len(str(len(episode_list)))
+            )
+        )
 
 
 if __name__ == '__main__':
