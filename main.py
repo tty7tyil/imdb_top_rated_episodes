@@ -86,6 +86,14 @@ def fetch(
     return set(episode_list)
 
 
+def print_episode(episode_set: Set[Tuple[int, int, int, str, float, str]]) -> None:
+    episode_list = list(episode_set)
+    # some other sort process here
+    episode_list.sort()
+    for e in episode_list:
+        print('S{1:0>2} E{2:0>2} - ({4: >4}) {3}'.format(*e))
+
+
 if __name__ == '__main__':
     if tv_show_id == '':
         tv_show_id = input('IMDb ID of the TV show to fetch: ')
