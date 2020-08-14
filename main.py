@@ -107,7 +107,7 @@ def print_episode(
     episode_list.sort(key=sort_method)
     for e in episode_list:
         print(
-            '{4:_>{index_width}}> S{0:0>2} E{1:0>2} - ({3: >4}) {2}'.format(
+            '{4:_>{index_width}} ({3: >4})> S{0:0>2} E{1:0>2} - {2}'.format(
                 *e, index_width=max(len(str(e[4])) for e in episode_list)
             )
         )
