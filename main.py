@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from tty7tyil_python import crawler_requests_session as crs
-from typing import Set, Tuple
+from typing import Any, Callable, Set, Tuple
 import bs4
 import requests
 import sys
@@ -88,7 +88,19 @@ def fetch(
 
 def print_episode(
     episode_set: Set[Tuple[int, int, str, float, int, str]],
-    sort_method = lambda e: e[4],
+    sort_method: Callable[
+        [
+            Tuple[
+                int,    # 0> season
+                int,    # 1> episode
+                str,    # 2> title
+                float,  # 3> rating
+                int,    # 4> original_index
+                str     # 5> tv_episode_id
+            ]
+        ],
+        Any
+    ] = lambda e: e[4],
 ) -> None:
     episode_list = list(episode_set)
     # some other sort process here
