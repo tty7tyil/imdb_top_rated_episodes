@@ -131,7 +131,7 @@ def print_episode_set_by_season(episode_set: Set[Tuple[int, int, str, float, int
     episode_set_by_season_list.append((_season, set(_per_season_list)))
 
     for s in episode_set_by_season_list:
-        pb.print_banner('season {}'.format(s[0]))
+        pb.print_banner('season {} ({:.2f})'.format(s[0], sum(e[3] for e in s[1]) / len(s[1])))
         print_episode_set(s[1], lambda e: (e[0], e[1]))
         print()
 
