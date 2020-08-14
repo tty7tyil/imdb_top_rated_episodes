@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 
 from tty7tyil_python import crawler_requests_session as crs
-from typing import Any, Callable, Set, Tuple
+from tty7tyil_python import print_banner as pb
+from typing import Any, Callable, List, Set, Tuple
 import bs4
 import requests
 import sys
@@ -86,7 +87,7 @@ def fetch(
     return set(episode_list)
 
 
-def print_episode(
+def print_episode_set(
     episode_set: Set[Tuple[int, int, str, float, int, str]],
     sort_method: Callable[
         [
@@ -103,7 +104,6 @@ def print_episode(
     ] = lambda e: e[4],
 ) -> None:
     episode_list = list(episode_set)
-    # some other sort process here
     episode_list.sort(key=sort_method)
     for e in episode_list:
         print(
@@ -113,7 +113,31 @@ def print_episode(
         )
 
 
+def print_episode_set_by_season(episode_set: Set[Tuple[int, int, str, float, int, str]]) -> None:
+    episode_list = list(episode_set)
+    episode_list.sort(key=lambda e: e[0])
+
+    episode_set_by_season_list: List[Tuple[int, Set[Tuple[int, int, str, float, int, str]]]] = []
+    _season: int = episode_list[0][0]
+    _per_season_list: List[Tuple[int, int, str, float, int, str]] = []
+    for e in episode_list:
+        if e[0] == _season:
+            _per_season_list.append(e)
+        else:
+            episode_set_by_season_list.append((_season, set(_per_season_list)))
+            _season = e[0]
+            _per_season_list = []
+            _per_season_list.append(e)
+    episode_set_by_season_list.append((_season, set(_per_season_list)))
+
+    for s in episode_set_by_season_list:
+        pb.print_banner('season {}'.format(s[0]))
+        print_episode_set(s[1], lambda e: (e[0], e[1]))
+        print()
+
+
 if __name__ == '__main__':
     if tv_show_id == '':
         tv_show_id = input('IMDb ID of the TV show to fetch: ')
-    fetch(tv_show_id)
+    episode_set = fetch(tv_show_id)
+    print_episode_set(episode_set)
