@@ -108,7 +108,7 @@ def print_episode(
     for e in episode_list:
         print(
             '{4:_>{index_width}}> S{0:0>2} E{1:0>2} - ({3: >4}) {2}'.format(
-                *e, index_width=len(str(len(episode_list)))
+                *e, index_width=max(len(str(e[4])) for e in episode_list)
             )
         )
 
